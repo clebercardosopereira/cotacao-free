@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cotações - Simplifique suas compras e vendas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --background-color: #f0f0f1;
+            --text-color: #333;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://example.com/hero-image.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: var(--secondary-color);
+        }
+        .features {
+            padding: 80px 0;
+            background-color: white;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        .feature {
+            text-align: center;
+            padding: 20px;
+        }
+        .feature i {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .how-it-works {
+            padding: 80px 0;
+            background-color: #f9f9f9;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+         /* Animações e efeitos */
+         .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .fade-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .slide-in-left.appear {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .scale-in.appear {
+            opacity: 1;
+            transform: scale(1);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .step-number {
+            font-size: 24px;
+            font-weight: bold;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            .hero p {
+                font-size: 18px;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo slide-in-left">Sistema de Cotações</div>
+                <div class="nav-links slide-in-left">
+                    <a href="#features">Recursos</a>
+                    <a href="#how-it-works">Como Funciona</a>
+                    <a href="{{ url_for('home') }}">Entrar</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1 class="fade-in">Simplifique suas Cotações e Economize</h1>
+            <p class="fade-in">Gerencie suas compras e vendas de forma eficiente com nosso Sistema de Cotações.</p>
+            <a href="{{ url_for('home') }}" class="cta-button fade-in pulse">Comece Agora</a>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="fade-in">Recursos Principais</h2>
+            <div class="feature-grid">
+                <div class="feature scale-in">
+                    <i class="fas fa-file-invoice"></i>
+                    <h3>Criação Rápida de Cotações</h3>
+                    <p>Crie cotações personalizadas em minutos com nossa interface intuitiva.</p>
+                </div>
+                <div class="feature scale-in">
+                    <i class="fas fa-users"></i>
+                    <h3>Múltiplos Fornecedores</h3>
+                    <p>Receba ofertas de vários fornecedores para cada cotação.</p>
+                </div>
+                <div class="feature scale-in">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Comparação Fácil</h3>
+                    <p>Compare preços e condições de diferentes fornecedores facilmente.</p>
+                </div>
+                <div class="feature scale-in">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Acesso em Qualquer Lugar</h3>
+                    <p>Use o sistema em qualquer dispositivo, incluindo smartphones e tablets.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="fade-in">Como Funciona</h2>
+            <div class="steps">
+                <div class="step slide-in-left">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Crie sua Cotação</h3>
+                        <p>Insira os itens que deseja cotar, com quantidades e descrições detalhadas.</p>
+                    </div>
+                </div>
+                <div class="step slide-in-left">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Compartilhe com Fornecedores</h3>
+                        <p>Envie links personalizados para seus fornecedores preencherem as ofertas.</p>
+                    </div>
+                </div>
+                <div class="step slide-in-left">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Receba e Compare Ofertas</h3>
+                        <p>Visualize todas as ofertas em um só lugar e identifique as melhores condições.</p>
+                    </div>
+                </div>
+                <div class="step slide-in-left">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Tome Decisões Informadas</h3>
+                        <p>Escolha a melhor oferta com base em preço, prazo e outras condições.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p class="fade-in">&copy; 2024 Sistema de Cotações. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Remover overlay de carregamento
+        window.addEventListener('load', function() {
+            document.getElementById('loadingOverlay').style.opacity = '0';
+            setTimeout(function() {
+                document.getElementById('loadingOverlay').style.display = 'none';
+            }, 500);
+        });
+
+        // Animação de elementos ao rolar
+        function checkScroll() {
+            var elements = document.querySelectorAll('.fade-in, .slide-in-left, .scale-in');
+            elements.forEach(function(element) {
+                var position = element.getBoundingClientRect().top;
+                var screenPosition = window.innerHeight / 1.3;
+                if(position < screenPosition) {
+                    element.classList.add('appear');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('load', checkScroll);
+    </script>
+</body>
+</html>

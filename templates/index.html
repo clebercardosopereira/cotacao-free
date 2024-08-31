@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistema de Cotações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            font-size: 14px;
+        }
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            padding-bottom: 80px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        button:active {
+            background-color: var(--secondary-color);
+        }
+        #itens {
+            margin-top: 20px;
+        }
+        .item {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .item button {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        #links {
+            margin-top: 20px;
+        }
+        .link-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .link-button i {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .link-button span {
+            font-size: 16px;
+        }
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">Sistema de Cotações</div>
+        <div class="content">
+            <div class="form-group">
+                <input type="number" id="quantidade" placeholder="Quantidade" min="1">
+            </div>
+            <div class="form-group">
+                <input type="text" id="nome" placeholder="Nome do Produto" oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <div class="form-group">
+                <input type="text" id="descricao" placeholder="Descrição (opcional)" oninput="this.value = this.value.toUpperCase()">
+            </div>
+            <button onclick="adicionarItem()">Adicionar Item</button>
+            <div id="itens"></div>
+            <button onclick="gerarCotacao()">Gerar Cotação</button>
+        </div>
+        <div class="footer">
+            © 2024 Sistema de Cotações
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="cotacaoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="fecharModal()">&times;</span>
+            <h2>Cotação Gerada com Sucesso!</h2>
+            <p>Sua cotação foi criada. Use os links abaixo para compartilhar ou acompanhar.</p>
+            <div id="modalLinks"></div>
+            <button onclick="fecharModal()">Fechar e Iniciar Nova Cotação</button>
+        </div>
+    </div>
+
+    <script>
+        let itens = [];
+        let linkFornecedor = '';
+        let linkAcompanhamento = '';
+
+        function adicionarItem() {
+            const quantidade = document.getElementById('quantidade').value;
+            const nome = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+
+            if (quantidade && nome) {
+                itens.push({ quantidade, nome, descricao });
+                atualizarListaItens();
+                limparCampos();
+            } else {
+                alert('Por favor, preencha a quantidade e o nome do produto.');
+            }
+        }
+
+        function atualizarListaItens() {
+            const listaItens = document.getElementById('itens');
+            listaItens.innerHTML = itens.map((item, index) => 
+                `<div class="item">${item.quantidade} x ${item.nome}${item.descricao ? ' - ' + item.descricao : ''} 
+                 <button onclick="removerItem(${index})">Remover</button></div>`
+            ).join('');
+        }
+
+        function removerItem(index) {
+            itens.splice(index, 1);
+            atualizarListaItens();
+        }
+
+        function limparCampos() {
+            document.getElementById('quantidade').value = '';
+            document.getElementById('nome').value = '';
+            document.getElementById('descricao').value = '';
+        }
+
+        function gerarCotacao() {
+            if (itens.length === 0) {
+                alert('Adicione pelo menos um item antes de gerar a cotação.');
+                return;
+            }
+
+            let nomeCotacao = prompt("Por favor, dê um nome para esta cotação:");
+            if (!nomeCotacao) {
+                alert('É necessário fornecer um nome para a cotação.');
+                return;
+            }
+            
+            nomeCotacao = nomeCotacao.toUpperCase();
+
+            fetch('/gerar_cotacao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome: nomeCotacao, itens: itens })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const baseUrl = window.location.origin;
+                linkFornecedor = baseUrl + data.link_fornecedor;
+                linkAcompanhamento = baseUrl + data.link_acompanhamento;
+                
+                const modalLinksDiv = document.getElementById('modalLinks');
+                modalLinksDiv.innerHTML = `
+                    <div class="link-button" onclick="copiarLink('${linkFornecedor}')">
+                        <i class="fas fa-copy"></i>
+                        <span>Copiar Link Fornecedor</span>
+                    </div>
+                    <div class="link-button" onclick="abrirLinkAcompanhamento('${linkAcompanhamento}')">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>Abrir Acompanhamento</span>
+                    </div>
+                `;
+                
+                document.getElementById('cotacaoModal').style.display = 'block';
+            });
+        }
+
+        function copiarLink(link) {
+    if (navigator.clipboard && window.isSecureContext) {
+        // Para navegadores modernos
+        navigator.clipboard.writeText(link).then(() => {
+            alert('Link copiado para a área de transferência!');
+        }).catch(err => {
+            console.error('Erro ao copiar o link: ', err);
+            fallbackCopyTextToClipboard(link);
+        });
+    } else {
+        // Fallback para navegadores mais antigos ou ambientes não seguros
+        fallbackCopyTextToClipboard(link);
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // Evita rolagem em dispositivos móveis
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'Link copiado para a área de transferência!' : 'Não foi possível copiar o link.';
+        alert(msg);
+    } catch (err) {
+        console.error('Erro ao copiar o link: ', err);
+        alert('Não foi possível copiar o link automaticamente. O link é: ' + text);
+    }
+
+    document.body.removeChild(textArea);
+}
+
+        function abrirLinkAcompanhamento(link) {
+            window.open(link, '_blank');
+        }
+
+        function fecharModal() {
+            document.getElementById('cotacaoModal').style.display = 'none';
+            // Limpar o formulário e a lista de itens
+            itens = [];
+            atualizarListaItens();
+            limparCampos();
+        }
+    </script>
+</body>
+</html>

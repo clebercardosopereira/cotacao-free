@@ -1,0 +1,32 @@
+{% for item in cotacao.itens %}
+<div class="item fade-in">
+    <h3>{{ item.quantidade }} x {{ item.nome }}</h3>
+    {% if item.descricao %}
+    <p>Descrição: {{ item.descricao }}</p>
+    {% endif %}
+    <table>
+        <tr>
+            <th>Fornecedor</th>
+            <th>Preço</th>
+            <th>Observação</th>
+        </tr>
+        {% for fornecedor_id, oferta_fornecedor in ofertas.items() %}
+        <tr>
+            <td>
+                
+                <div class="fornecedor-info">
+                    <strong>CPF/CNPJ:</strong> {{ oferta_fornecedor['info']['cpf_cnpj'] }}<br>
+                    <strong>Nome Fantasia:</strong> {{ oferta_fornecedor['info']['nome_fantasia'] }}<br>
+                    <strong>Nome do Vendedor:</strong> {{ oferta_fornecedor['info']['nome_vendedor'] }}<br>
+                    <strong>Contato Vendedor:</strong> {{ oferta_fornecedor['info']['contato_vendedor'] }}
+                </div>
+            </td>
+            <td data-preco="{{ oferta_fornecedor['itens'][item.nome]['preco'] }}">
+                {{ oferta_fornecedor['itens'][item.nome]['preco'] }}
+            </td>
+            <td>{{ oferta_fornecedor['itens'][item.nome]['observacao'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endfor %}

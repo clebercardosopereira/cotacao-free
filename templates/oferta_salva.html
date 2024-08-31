@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Oferta Salva com Sucesso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --background-color: #f0f0f1;
+            --text-color: #333;
+            --success-color: #28a745;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: var(--success-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .success-icon {
+            text-align: center;
+            font-size: 48px;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .cta-button:hover {
+            background-color: var(--secondary-color);
+        }
+        .benefits {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .benefits h2 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        .benefits ul {
+            list-style-type: none;
+        }
+        .benefits li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .benefits li::before {
+            content: "\f00c";
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Oferta Salva com Sucesso!</h1>
+        <p>Sua oferta para a cotação <strong>{{ cotacao_id }}</strong> foi recebida e salva em nosso sistema.</p>
+        <p>Seu ID de fornecedor é: <strong>{{ fornecedor_id }}</strong></p>
+        <p>Guarde este ID para referência futura, caso precise fazer alterações na sua oferta.</p>
+        
+        <div class="benefits">
+            <h2>Você sabia?</h2>
+            <p>Você também pode usar nosso sistema para suas próprias cotações!</p>
+            <ul>
+                <li>Crie cotações personalizadas em minutos</li>
+                <li>Receba ofertas de múltiplos fornecedores</li>
+                <li>Compare preços e condições facilmente</li>
+                <li>Economize tempo e dinheiro em suas compras</li>
+            </ul>
+        </div>
+
+        <a href="{{ url_for('home') }}" class="cta-button">Criar Minha Própria Cotação</a>
+    </div>
+</body>
+</html>
