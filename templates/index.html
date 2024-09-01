@@ -68,6 +68,12 @@
             font-weight: bold;
             text-transform: uppercase;
         }
+
+         .item.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+        
         button:active {
             background-color: var(--secondary-color);
         }
@@ -81,6 +87,9 @@
             margin-bottom: 10px;
             border-radius: 8px;
             font-size: 14px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
         }
         .item button {
             background-color: #e74c3c;
@@ -102,7 +111,11 @@
             color: white;
             border-radius: 8px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
+        .link-button:active {
+        transform: scale(0.95);
+    }
         .link-button i {
             font-size: 20px;
             margin-right: 10px;
@@ -137,6 +150,13 @@
             border-radius: 8px;
             text-align: center;
         }
+        @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+        .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
         .close-button {
             color: #aaa;
             float: right;
@@ -214,12 +234,19 @@
         }
 
         function atualizarListaItens() {
-            const listaItens = document.getElementById('itens');
-            listaItens.innerHTML = itens.map((item, index) => 
-                `<div class="item">${item.quantidade} x ${item.nome}${item.descricao ? ' - ' + item.descricao : ''} 
-                 <button onclick="removerItem(${index})">Remover</button></div>`
-            ).join('');
-        }
+        const listaItens = document.getElementById('itens');
+        listaItens.innerHTML = itens.map((item, index) => 
+            `<div class="item" style="transition-delay: ${index * 0.1}s;">
+                ${item.quantidade} x ${item.nome}${item.descricao ? ' - ' + item.descricao : ''} 
+                <button onclick="removerItem(${index})">Remover</button>
+            </div>`
+        ).join('');
+
+        // Aplicar a animação após um pequeno delay
+        setTimeout(() => {
+            document.querySelectorAll('.item').forEach(item => item.classList.add('show'));
+        }, 50);
+    }
 
         function removerItem(index) {
             itens.splice(index, 1);
