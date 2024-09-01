@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+    <meta property="og:title" content="Cotação para {{ cotacao.nome }}">
+    <meta property="og:description" content="Forneça sua oferta para a cotação {{ cotacao_id }}. Sistema de Cotações.">
+    <meta property="og:image" content="https://www.lageado.com/img/logoLageado.JPG">
+    <meta property="og:url" content="{{ url_for('pagina_fornecedor', cotacao_id=cotacao_id, _external=True) }}">
+    <meta property="og:type" content="website">
+    
     <title>Página do Fornecedor</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
