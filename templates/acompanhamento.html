@@ -291,14 +291,7 @@
         }
 
         function prepararParaImpressao() {
-            const itens = document.querySelectorAll('.item');
-            itens.forEach((item, index) => {
-                if (index > 0) {
-                    const quebra = document.createElement('div');
-                    quebra.style.pageBreakBefore = 'always';
-                    item.parentNode.insertBefore(quebra, item);
-                }
-            });
+            document.querySelectorAll('.page-break').forEach(el => el.remove());
         }
 
         function formatarPreco(precoStr) {
